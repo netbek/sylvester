@@ -4,16 +4,32 @@
 
 ### Ubuntu
 
+Install system dependencies:
+
 ```
 sudo apt-get install graphicsmagick pngquant
+```
+
+Install or update local Node dependencies:
+
+```
+cd /path/to/sylvester
 yarn install
 ```
 
 ### OS X
 
+Install system dependencies:
+
 ```
 brew install graphicsmagick
 brew install pngquant
+```
+
+Install or update local Node dependencies:
+
+```
+cd /path/to/sylvester
 yarn install
 ```
 
@@ -35,6 +51,7 @@ gulp process
 
 * [Force-directed graph drawing](https://en.wikipedia.org/wiki/Force-directed_graph_drawing)
 * [Erdős–Rényi model](https://en.wikipedia.org/wiki/Erd%C5%91s%E2%80%93R%C3%A9nyi_model)
+* [d3/d3-force](https://github.com/d3/d3-force)
 
 ## Feature ideas
 
