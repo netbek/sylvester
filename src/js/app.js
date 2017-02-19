@@ -1,8 +1,8 @@
 (function () {
   var config = {
     model: 'fastGnpRandomGraph',
-    nodes: 40,
-    probability: 0.05,
+    n: 40,
+    p: 0.05,
     minRadius: 0.75,
     maxRadius: 4,
     fenceRadius: 1.2,
@@ -54,8 +54,8 @@
   var f1 = gui.addFolder('Graph');
 
   f1.add(config, 'model', {
-    'Erdős-Rényi': 'gnpRandomGraph',
-    'Erdős-Rényi (fast)': 'fastGnpRandomGraph'
+    'G(n, p)': 'gnpRandomGraph',
+    'G(n, p) (fast)': 'fastGnpRandomGraph'
   }).onChange(function (nextValue) {
     if (previousConfig.model !== nextValue) {
       previousConfig.model = nextValue;
@@ -63,16 +63,16 @@
     }
   });
 
-  f1.add(config, 'nodes', 5, 100).step(1).onChange(function (nextValue) {
-    if (previousConfig.nodes !== nextValue) {
-      previousConfig.nodes = nextValue;
+  f1.add(config, 'n', 5, 100).step(1).onChange(function (nextValue) {
+    if (previousConfig.n !== nextValue) {
+      previousConfig.n = nextValue;
       foo();
     }
   });
 
-  f1.add(config, 'probability', 0, 1).step(0.025).onChange(function (nextValue) {
-    if (previousConfig.probability !== nextValue) {
-      previousConfig.probability = nextValue;
+  f1.add(config, 'p', 0, 1).step(0.01).onChange(function (nextValue) {
+    if (previousConfig.p !== nextValue) {
+      previousConfig.p = nextValue;
       foo();
     }
   });
@@ -362,7 +362,7 @@
   }
 
   function foo() {
-    graph = generateGnpGraph(config.model, config.nodes, config.probability);
+    graph = generateGnpGraph(config.model, config.n, config.p);
     buildSimulation(graph);
   }
 
