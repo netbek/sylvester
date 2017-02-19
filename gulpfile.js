@@ -3,17 +3,22 @@ var autoprefixer = require('gulp-autoprefixer');
 var cheerio = require('cheerio');
 var cssmin = require('gulp-cssmin');
 var fs = require('fs-extra');
+var globPromise = require('glob-promise');
+var gm = require('gm');
 var gulp = require('gulp');
 var livereload = require('livereload');
 var nunjucks = require('nunjucks');
 var open = require('open');
 var os = require('os');
 var path = require('path');
+var pngquant = require('pngquant');
 var Promise = require('bluebird');
 var rename = require('gulp-rename');
 var runSequence = require('run-sequence');
 var sanitizeFilename = require('sanitize-filename');
 var sass = require('gulp-sass');
+var streamifier = require('streamifier');
+var svg2png = require('svg2png');
 var svgmin = require('gulp-svgmin');
 var uglify = require('gulp-uglify');
 var webserver = require('gulp-webserver');
@@ -43,6 +48,9 @@ var platform = os.platform();
 if (_.has(config.webserver.browsers, platform)) {
   browser = config.webserver.browsers[platform];
 }
+
+// Create directory in which SVG files that should be processed are stored.
+fs.mkdirpSync(config.process.src);
 
 /*******************************************************************************
  * Functions
@@ -104,6 +112,96 @@ function buildSvg(src, dist) {
       }]
     }))
     .pipe(gulp.dest(dist));
+}
+
+/**
+ *
+ * @param  {String} src Soure file path
+ * @param  {String} destDir Destination directory path
+ * @param  {Number} scale
+ * @param  {String} suffix
+ * @return {Promise}
+ */
+function process(src, destDir, scale, suffix) {
+  var extname = path.extname(src);
+  var basename = path.basename(src, extname);
+  var dest = path.join(destDir, basename + (_.isUndefined(suffix) ? '' : suffix) + '.png');
+
+  return fs.mkdirpAsync(destDir)
+    .then(function () {
+      return fs.readFileAsync(src, 'utf-8');
+    })
+    .then(function (data) {
+      var resize;
+
+      if (scale) {
+        var $ = cheerio.load(data, {
+          xmlMode: true
+        });
+        var $svg = $('svg');
+
+        // https://github.com/domenic/svg2png/blob/v3.0.1/lib/converter.js#L90
+        var width = $svg.attr('width');
+        var height = $svg.attr('height');
+        var viewBox = $svg.attr('viewBox');
+        var widthIsPercent = /%\s*$/.test(width);
+        var heightIsPercent = /%\s*$/.test(height);
+        width = !widthIsPercent && parseFloat(width);
+        height = !heightIsPercent && parseFloat(height);
+
+        if (width && height) {
+          resize = {
+            width: width * scale,
+            height: height * scale
+          };
+
+          if (!viewBox) {
+            $svg.attr('viewBox', '0 0 ' + width + ' ' + height);
+          }
+        }
+
+        data = $.xml();
+      }
+
+      _.forEach(config.process.transparentColor.src, function (str) {
+        data = data.replace(new RegExp(_.escapeRegExp(str), 'gi'), config.process.transparentColor.dist);
+      });
+
+      // Convert SVG to PNG.
+      var buffer = new Buffer(data, 'utf-8');
+
+      return svg2png(buffer, resize);
+    })
+    .then(function (buffer) {
+      return new Promise(function (resolve, reject) {
+        gm(buffer, dest)
+          .type('truecolormatte')
+          .transparent(config.process.transparentColor.dist)
+          .trim()
+          .toBuffer('PNG', function (err, buffer) {
+            if (err) {
+              reject(err);
+            }
+            else {
+              resolve(buffer);
+            }
+          })
+      });
+    })
+    .then(function (buffer) {
+      return new Promise(function (resolve, reject) {
+        var writeStream = fs.createWriteStream(dest);
+
+        writeStream.on('close', function () {
+          resolve();
+        });
+
+        var readStream = streamifier.createReadStream(buffer)
+          // Minify PNG.
+          .pipe(new pngquant([256]))
+          .pipe(writeStream);
+      });
+    });
 }
 
 /**
@@ -199,6 +297,17 @@ gulp.task('livereload', function () {
   );
 });
 
+gulp.task('process', function () {
+  return globPromise(path.join(config.process.src, '*.svg'))
+    .then(function (files) {
+      return Promise.mapSeries(files, function (file) {
+        return Promise.mapSeries([1, 2], function (scale) {
+          return process(file, config.process.dist, scale, scale === 1 ? undefined : '@' + scale + 'x');
+        });
+      });
+    });
+});
+
 /*******************************************************************************
  * Watch tasks
  ******************************************************************************/
@@ -218,4 +327,4 @@ gulp.task('watch:livereload', function (cb) {
  * Default task
  ******************************************************************************/
 
-gulp.task('default', ['build']);
+gulp.task('default', ['build', 'process']);

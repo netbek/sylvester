@@ -9,6 +9,7 @@ nbproject
 .netbeans.xml
 
 # Temporary files
+/process/
 /temp/
 
 # Dist files

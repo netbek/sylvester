@@ -36,6 +36,9 @@
     "breakpoint-sass": "^2.7.0",
     "cheerio": "^0.22.0",
     "fs-extra": "^2.0.0",
+    "glob": "^7.1.1",
+    "glob-promise": "^3.1.0",
+    "gm": "^1.23.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-cssmin": "^0.1.7",
@@ -52,8 +55,11 @@
     "nunjucks": "^3.0.0",
     "open": "0.0.5",
     "os": "^0.1.1",
+    "pngquant": "^1.2.0",
     "run-sequence": "^1.2.2",
     "sanitize-filename": "^1.6.1",
-    "singularitygs": "^1.7.0"
+    "singularitygs": "^1.7.0",
+    "streamifier": "^0.1.1",
+    "svg2png": "3.0.1"
   }
 }
