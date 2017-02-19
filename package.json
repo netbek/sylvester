@@ -2,7 +2,6 @@
   "name": "sylvester",
   "version": "0.1.0",
   "description": "",
-  "main": "lib/meter.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/netbek/sylvester"
