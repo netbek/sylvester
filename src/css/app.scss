@@ -1,0 +1,43 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFF;
+}
+
+.stage {
+  flex: 0 0 auto;
+  background: #000;
+  user-select: none;
+}
+
+// .links {
+//   line {
+//     stroke: #FFF;
+//     stroke-width: 1px;
+//   }
+// }
+//
+// .nodes {
+//   circle {
+//     fill: #FFF;
+//   }
+// }
+
+// .dg {
+//   .cr {
+//     &.function {
+//       background: darken(#e61d5f, 10%);
+//
+//       &:focus,
+//       &:hover {
+//         background: #e61d5f !important;
+//       }
+//     }
+//   }
+// }
