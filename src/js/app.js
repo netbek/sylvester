@@ -1,7 +1,7 @@
 (function () {
   var config = {
     model: 'fastGnpRandomGraph',
-    n: 40,
+    n: 50,
     p: 0.05,
     minRadius: 0.75,
     maxRadius: 4,
