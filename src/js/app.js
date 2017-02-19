@@ -12,7 +12,7 @@
     collisionEnabled: true,
     collisionRadius: 3,
     manyBodyEnabled: false,
-    manyBodyStrength: -200,
+    manyBodyStrength: -50,
     'Stop simulation': function () {
       simulation.stop();
     },
