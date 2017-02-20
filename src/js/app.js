@@ -55,7 +55,7 @@
 
   var gui = new dat.GUI();
 
-  gui.remember(config);
+  // gui.remember(config);
 
   var f1 = gui.addFolder('Graph');
 
