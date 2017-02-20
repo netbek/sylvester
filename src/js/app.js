@@ -22,9 +22,15 @@
     'Regenerate graph': function () {
       foo();
     },
+    'Save config': function () {
+      saveJSON(exportConfig(config), 'config');
+    },
+    'Save data': function () {
+      saveJSON(exportGraph(graph), 'graph');
+    },
     'Save SVG': function () {
       d3_save_svg.save(svg.node(), {
-        filename: 'sylvester'
+        filename: 'graph'
       });
     }
   };
@@ -160,6 +166,8 @@
   gui.add(config, 'Stop simulation');
   gui.add(config, 'Restart simulation');
   gui.add(config, 'Regenerate graph');
+  gui.add(config, 'Save config');
+  gui.add(config, 'Save data');
   gui.add(config, 'Save SVG');
 
   function generateGnpGraph(type, n, p) {
@@ -216,6 +224,46 @@
     });
 
     return graph;
+  }
+
+  function exportConfig(config) {
+    return _.pick(config, [
+      'model',
+      'n',
+      'p',
+      'minRadius',
+      'maxRadius',
+      'fenceRadius',
+      'radiusDistribution',
+      'symbolDistribution',
+      'fenceDistribution',
+      'collisionEnabled',
+      'collisionRadius',
+      'manyBodyEnabled',
+      'manyBodyStrength'
+    ]);
+  }
+
+  function exportGraph(graph) {
+    return {
+      nodes: _.map(graph.nodes, function (node) {
+        return _.pick(node, [
+          'id',
+          'links',
+          'scale',
+          'symbol',
+          'hasFence',
+          'x',
+          'y'
+        ]);
+      }),
+      links: _.map(graph.links, function (link) {
+        return {
+          source: link.source.id,
+          target: link.target.id
+        };
+      })
+    };
   }
 
   function buildSimulation(graph) {
@@ -359,6 +407,31 @@
 
   function setManyBodyForce() {
     simulation.force('charge', config.manyBodyEnabled ? d3.forceManyBody().strength(config.manyBodyStrength) : _.noop);
+  }
+
+  function saveJSON(data, basename) {
+    return saveFile([JSON.stringify(data, null, 2)], basename + '.json', 'text/plain;charset=' + document.characterSet);
+  }
+
+  function saveFile(data, filename, type) {
+    window.URL = (window.URL || window.webkitURL);
+    var blob = new Blob(data, {
+      type: type
+    });
+    var url = window.URL.createObjectURL(blob);
+    var body = document.body;
+    var a = document.createElement('a');
+
+    body.appendChild(a);
+    a.setAttribute('download', filename);
+    a.setAttribute('href', url);
+    a.style.display = 'none';
+    a.click();
+    a.parentNode.removeChild(a);
+
+    setTimeout(function () {
+      window.URL.revokeObjectURL(url);
+    }, 10);
   }
 
   function foo() {
