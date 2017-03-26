@@ -1,5 +1,9 @@
 # sylvester
 
+## Demo
+
+[netbek.github.io/sylvester](https://netbek.github.io/sylvester)
+
 ## Installation
 
 ### Ubuntu
