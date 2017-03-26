@@ -12,8 +12,5 @@ nbproject
 /process/
 /temp/
 
-# Dist files
-/css/
-/js/
-/svg/
-/www/
+# GH pages
+.publish

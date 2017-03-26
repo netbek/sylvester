@@ -3,6 +3,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var cheerio = require('cheerio');
 var cssmin = require('gulp-cssmin');
 var fs = require('fs-extra');
+var ghPages = require('gulp-gh-pages');
 var globPromise = require('glob-promise');
 var gm = require('gm');
 var gulp = require('gulp');
@@ -256,36 +257,62 @@ gulp.task('livereload-reload', function (cb) {
  * Tasks
  ******************************************************************************/
 
-gulp.task('build-css', function (cb) {
-  buildCss('src/css/**/*.scss', 'css/')
+gulp.task('clean-demo', function () {
+  return fs.removeAsync('demo/');
+});
+
+gulp.task('build-demo-css', function (cb) {
+  buildCss('src/css/**/*.scss', 'demo/css/')
     .on('end', cb);
 });
 
-gulp.task('build-js', function (cb) {
-  buildJs('src/js/**/*.js', 'js/')
+gulp.task('build-demo-js', function (cb) {
+  buildJs('src/js/**/*.js', 'demo/js/')
     .on('end', cb);
 });
 
-gulp.task('build-svg', function (cb) {
-  buildSvg('src/svg/**/*.svg', 'svg/')
+gulp.task('build-demo-svg', function (cb) {
+  buildSvg('src/svg/**/*.svg', 'demo/svg/')
     .on('end', cb);
 });
 
-gulp.task('build-www', function () {
+gulp.task('build-demo-page', function () {
   var context = {};
   var data = nunjucks.render('src/index.njk', context);
 
-  return fs.outputFileAsync('www/index.html', data, 'utf-8');
+  return fs.outputFileAsync('demo/index.html', data, 'utf-8');
+});
+
+gulp.task('build-demo-vendor', function () {
+  return gulp.src([
+      'node_modules/normalize-css/**/*',
+      'node_modules/dat.gui/**/*',
+      'node_modules/lodash/**/*',
+      'node_modules/jsnetworkx/**/*',
+      'node_modules/d3/**/*',
+      'node_modules/d3-save-svg/**/*',
+      'node_modules/dat.gui/**/*'
+    ], {
+      base: 'node_modules'
+    })
+    .pipe(gulp.dest('demo/vendor/'));
 });
 
 gulp.task('build', function (cb) {
   runSequence(
-    'build-css',
-    'build-js',
-    'build-svg',
-    'build-www',
+    'clean-demo',
+    'build-demo-css',
+    'build-demo-js',
+    'build-demo-svg',
+    'build-demo-page',
+    'build-demo-vendor',
     cb
   );
+});
+
+gulp.task('deploy', function () {
+  return gulp.src('demo/**/*')
+    .pipe(ghPages());
 });
 
 gulp.task('livereload', function () {

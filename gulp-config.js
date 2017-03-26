@@ -56,7 +56,7 @@ module.exports = {
     path: '/',
     livereload: false,
     directoryListing: false,
-    open: '/www/',
+    open: '/demo/',
     https: false,
     browsers: {
       'default': 'firefox',

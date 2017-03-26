@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>sylvester</title>
+    <link rel="stylesheet" href="vendor/normalize-css/normalize.css"/>
+    <link rel="stylesheet" href="vendor/dat.gui/build/dat.gui.css"/>
+    <link rel="stylesheet" href="css/app.css"/>
+  </head>
+  <body>
+    <div id="circle" hidden><svg viewBox="0 0 512 512" width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#FFF" d="M0 256a256 256 0 1 0 512 0 256 256 0 1 0-512 0"/>
+</svg>
+</div>
+    <div id="logo" hidden><svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+    <path fill="#FFF" d="M0 256c0 141.385 114.615 256 256 256s256-114.615 256-256S397.385 0 256 0 0 114.615 0 256"/>
+    <path fill="#000FFF" d="M256 480c-59.833 0-116.083-23.3-158.392-65.608C55.3 372.084 32 315.833 32 256S55.3 139.917 97.608 97.608 196.167 32 256 32s116.084 23.3 158.392 65.608C456.7 139.917 480 196.167 480 256s-23.3 116.084-65.608 158.392C372.084 456.7 315.833 480 256 480zm0-400c-97.047 0-176 78.953-176 176s78.953 176 176 176 176-78.953 176-176S353.047 80 256 80z"/>
+</svg>
+</div>
+
+    <svg class="stage" width="800" height="600"></svg>
+
+    <script src="vendor/lodash/lodash.min.js"></script>
+    <script src="vendor/jsnetworkx/jsnetworkx.js"></script>
+    <script src="vendor/d3/build/d3.min.js"></script>
+    <script src="vendor/d3-save-svg/build/d3-save-svg.min.js"></script>
+    <script src="vendor/dat.gui/build/dat.gui.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
