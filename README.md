@@ -63,7 +63,6 @@ gulp process
 
 * [Force-Directed Graph - Mike Bostock](https://bl.ocks.org/mbostock/4062045) (GNU General Public License, version 3)
 * [Collision Detection - Mike Bostock](https://bl.ocks.org/mbostock/31ce330646fa8bcb7289ff3b97aab3f5) (GNU General Public License, version 3)
-* `/src/svg/logo.svg` - (c) Siyavula Education (All rights reserved)
 
 ## License
 
